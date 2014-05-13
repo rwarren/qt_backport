@@ -1,11 +1,14 @@
-from setuptools import setup, find_packages
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 import codecs
 import os
 import re
 
 from version import __version__
-
-here = os.path.abspath(os.path.dirname(__file__))
 
 # Get the long description from the relevant file
 with codecs.open('README.rst', encoding='utf-8') as f:

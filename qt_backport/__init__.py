@@ -1,6 +1,5 @@
 import sys
 import os
-from PyQt5 import QtCore
 
 #hack in the package version from the root pkg dir...
 _this_dir = os.path.abspath(os.path.dirname(__file__))
@@ -26,6 +25,14 @@ CURRENT_QT_VERSION_TUPLE = None
 CURRENT_QT_VERSION_STR = None
 
 def _create_base_qt4_emulator_with_pyqt5(emulator_module):
+    try:
+        import PyQt5
+    except ImportError:
+        install_url = \
+            "http://pyqt.sourceforge.net/Docs/PyQt5/installation.html"
+        raise ImportError(("qt_backport requires PyQt5 in order to function. "
+                           "To install it, please see: %s" % install_url))
+    from PyQt5 import QtCore as _Qt5Core
     import qt5_backport as _qt5_backport
     _qt5_backport.load_modules(emulator_module)
     _qt5_backport.reassemble_QtGui(emulator_module)
@@ -36,7 +43,7 @@ def _create_base_qt4_emulator_with_pyqt5(emulator_module):
     global CURRENT_WRAPPER_VERSION_TUPLE
     global CURRENT_WRAPPER_VERSION_STR
     CURRENT_WRAPPER = PYQT5
-    CURRENT_WRAPPER_VERSION_TUPLE = tuple(QtCore.PYQT_VERSION_STR.split("."))
+    CURRENT_WRAPPER_VERSION_TUPLE = tuple(_Qt5Core.PYQT_VERSION_STR.split("."))
     CURRENT_WRAPPER_VERSION_STR = \
         "%s v%s" % (CURRENT_WRAPPER, ".".join(CURRENT_WRAPPER_VERSION_TUPLE))
     
