@@ -3,7 +3,7 @@ import os
 
 #hack in the package version from the root pkg dir...
 _this_dir = os.path.abspath(os.path.dirname(__file__))
-_root_pkg_dir = os.path.join(THIS_DIR, "..")
+_root_pkg_dir = os.path.join(_this_dir, "..")
 sys.path.insert(0, _root_pkg_dir)
 from version import __version__
 sys.path.remove(_root_pkg_dir)
@@ -74,9 +74,10 @@ def emulate(emulator, wrapper):
     emulation_dispatcher[(emulator, wrapper)](emulator_module)
     
     #Set the qt_backport constants that depended on us importing...
+    from PyQt5 import QtCore as _Qt5Core
     global CURRENT_EMULATOR
     global CURRENT_QT_VERSION_TUPLE
     global CURRENT_QT_VERSION_STR
     CURRENT_EMULATOR = emulator
-    CURRENT_QT_VERSION_TUPLE = tuple(QtCore.QT_VERSION_STR.split("."))
+    CURRENT_QT_VERSION_TUPLE = tuple(_Qt5Core.QT_VERSION_STR.split("."))
     CURRENT_QT_VERSION_STR = ".".join(CURRENT_QT_VERSION_TUPLE)
