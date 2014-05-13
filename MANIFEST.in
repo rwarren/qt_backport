@@ -1,4 +1,2 @@
-include DESCRIPTION.rst
-
-# Include the test suite (FIXME: does not work yet)
+include *.rst
 recursive-include tests *.py

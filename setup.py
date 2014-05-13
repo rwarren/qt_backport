@@ -3,6 +3,8 @@ import codecs
 import os
 import re
 
+from version import __version__
+
 here = os.path.abspath(os.path.dirname(__file__))
 
 # Get the long description from the relevant file
@@ -11,8 +13,8 @@ with codecs.open('README.rst', encoding='utf-8') as f:
 
 setup(
     name="qt_backport",
-    version=open("VERSION", "r").read().strip(),
-    description="Makes your PySide/PyQt4 code work with Qt5 (using PyQt5).",
+    version='.'.join(str(x) for x in __version__),
+    description="Makes PySide/PyQt4 code work with Qt5 (using PyQt5)",
     long_description=long_description,
     url='https://github.com/russw/qt_backport',
     author='Russell Warren',
