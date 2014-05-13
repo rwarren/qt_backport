@@ -1,2 +1,3 @@
+include version.py
 include *.rst
 recursive-include tests *.py
