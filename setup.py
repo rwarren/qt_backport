@@ -36,7 +36,7 @@ setup(
         "Operating System :: OS Independent",
     ],
     keywords='Qt PyQt4 PyQt5 PySide',
-    packages=["PyQt4", "PySide"],
+    packages=["qt_backport", "PyQt4", "PySide"],
     install_requires = [], #PyQt5 needed, but not PyPI friendly
     package_data={},
     data_files=[],
