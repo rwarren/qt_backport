@@ -296,6 +296,14 @@ def _patch_QGraphicsItem(qt_pkg):
     cls = qt_pkg.QtGui.QGraphicsItem
     transform_cls = qt_pkg.QtGui.QTransform
     
+    def _scale(self, *args, **kwargs):
+        if len(args) == 2:
+            #see http://goo.gl/pBJqEV
+            sx, sy = args
+            return self.setTransform(transform_cls.fromScale(sx, sy), True)
+        else:
+            return cls.scale(*args, **kwargs)
+    
     #simple renames...
     cls.acceptsHoverEvents = lambda self: self.acceptHoverEvents()
     cls.setAcceptsHoverEvents = lambda self, enabled: self.acceptHoverEvents(enabled)
@@ -303,9 +311,8 @@ def _patch_QGraphicsItem(qt_pkg):
     cls.rotate = lambda self, angle: self.setRotation(angle)
     
     #fixups...
-    cls.scale = lambda self, sx, sy: self.setTransform(transform_cls.fromScale(sx, sy), True)
+    cls.scale = _scale
     cls.translate = lambda self, dx, dy: self.setTransform(transform_cls.fromTranslate(dx, dy), True);
-    #cls.translate = lambda self, dx, dy: self.moveBy(dx, dy)
     cls.shear = lambda self, sh, sv: self.setTransform(transform_cls().shear(sh, sv), True)
 
 def _patch_QHeaderView(qt_pkg):
@@ -502,6 +509,7 @@ def _patch_QWheelEvent(qt_pkg):
     def _QWheelEvent_delta(self):
         angle = self.angleDelta()
         return angle.y()
+    
     def _QWheelEvent_orientation(self):
         #going with an orthogonal assumption here.  old orientation() docs are
         #less than clear.
@@ -513,6 +521,7 @@ def _patch_QWheelEvent(qt_pkg):
             ret = 0  #old code seems to expect this
         #print "orientation = %r" % ret
         return ret
+    
     cls.__init__ = _QWheelEvent_init
     cls.delta       = _QWheelEvent_delta
     cls.orientation = _QWheelEvent_orientation
