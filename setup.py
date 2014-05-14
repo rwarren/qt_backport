@@ -17,7 +17,7 @@ setup(
     version=open("qt_backport/VERSION", "r").read().strip(),
     description="Makes PySide/PyQt4 code work with Qt5 (using PyQt5)",
     long_description=long_description,
-    url='https://github.com/russw/qt_backport',
+    url='https://github.com/rwarren/qt_backport',
     author='Russell Warren',
     author_email='russ@perspexis.com',
     license='MIT',
