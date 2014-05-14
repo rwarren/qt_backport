@@ -3,11 +3,9 @@ import os
 
 #hack in the package version from the root pkg dir...
 _this_dir = os.path.abspath(os.path.dirname(__file__))
-_root_pkg_dir = os.path.join(_this_dir, "..")
-sys.path.insert(0, _root_pkg_dir)
-from version import __version__
-sys.path.remove(_root_pkg_dir)
-del _this_dir, _root_pkg_dir
+_ver_path = os.path.join(_this_dir, "../VERSION")
+__version__ = tuple(open(_ver_path, "r").read().strip().split("."))
+del _this_dir, _ver_path
 
 PYQT4 = "PyQt4"
 PYQT5 = "PyQt5"

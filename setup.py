@@ -8,15 +8,13 @@ import codecs
 import os
 import re
 
-from version import __version__
-
 # Get the long description from the relevant file
 with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
     name="qt_backport",
-    version='.'.join(str(x) for x in __version__),
+    version=open("VERSION", "r").read().strip(),
     description="Makes PySide/PyQt4 code work with Qt5 (using PyQt5)",
     long_description=long_description,
     url='https://github.com/russw/qt_backport',
