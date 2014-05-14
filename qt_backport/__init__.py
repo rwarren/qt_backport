@@ -1,9 +1,8 @@
 import sys
 import os
 
-#hack in the package version from the root pkg dir...
 _this_dir = os.path.abspath(os.path.dirname(__file__))
-_ver_path = os.path.join(_this_dir, "../VERSION")
+_ver_path = os.path.join(_this_dir, "VERSION")
 __version__ = tuple(open(_ver_path, "r").read().strip().split("."))
 del _this_dir, _ver_path
 

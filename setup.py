@@ -14,7 +14,7 @@ with codecs.open('README.rst', encoding='utf-8') as f:
 
 setup(
     name="qt_backport",
-    version=open("VERSION", "r").read().strip(),
+    version=open("qt_backport/VERSION", "r").read().strip(),
     description="Makes PySide/PyQt4 code work with Qt5 (using PyQt5)",
     long_description=long_description,
     url='https://github.com/russw/qt_backport',
