@@ -36,7 +36,7 @@ setup(
     keywords='Qt PyQt4 PyQt5 PySide',
     packages=["qt_backport", "PyQt4", "PySide"],
     install_requires = [], #PyQt5 needed, but not PyPI friendly
-    package_data={},
+    package_data={"qt_backport": ["VERSION", ]},
     data_files=[],
     entry_points={},
 )

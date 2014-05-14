@@ -1,3 +1,2 @@
-include qt_backport VERSION
 include *.rst
 recursive-include tests *.py

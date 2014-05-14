@@ -1,7 +1,10 @@
 import sys
 import os
 
-__version__ = tuple(open("VERSION", "r").read().strip().split("."))
+_this_dir = os.path.abspath(os.path.dirname(__file__))
+_ver_path = os.path.join(_this_dir, "VERSION")
+__version__ = open(_ver_path, "r").read().strip()
+del _this_dir, _ver_path
 
 PYQT4 = "PyQt4"
 PYQT5 = "PyQt5"
