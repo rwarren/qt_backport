@@ -296,13 +296,13 @@ def _patch_QColor(qt_pkg):
 def _patch_QGraphicsItem(qt_pkg):
     #see http://qt-project.org/doc/qt-5/qgraphicsitem-compat.html
     cls = qt_pkg.QtGui.QGraphicsItem
-    transform_cls = qt_pkg.QtGui.QTransform
+    QTransform = qt_pkg.QtGui.QTransform
     
     def _scale(self, *args, **kwargs):
         if len(args) == 2:
             #see http://goo.gl/pBJqEV
             sx, sy = args
-            return self.setTransform(transform_cls.fromScale(sx, sy), True)
+            return self.setTransform(QTransform.fromScale(sx, sy), True)
         else:
             return cls.scale(self, *args, **kwargs)
     
@@ -313,7 +313,8 @@ def _patch_QGraphicsItem(qt_pkg):
         #any existing transformations. The old rotate() *did* work with
         #existing transformations. To be compatibile with this we need to use
         #the transformation system.
-        self.setTransform(transform_cls().rotate(angle), True)
+        # - see https://bugreports.qt-project.org/browse/QTBUG-39027
+        self.setTransform(QTransform().rotate(angle), True)
         
     #simple renames...
     cls.acceptsHoverEvents = lambda self: self.acceptHoverEvents()
@@ -323,8 +324,8 @@ def _patch_QGraphicsItem(qt_pkg):
     
     #fixups...
     cls.scale = _scale
-    cls.shear = lambda self, sh, sv: self.setTransform(transform_cls().shear(sh, sv), True)
-    cls.translate = lambda self, dx, dy: self.setTransform(transform_cls.fromTranslate(dx, dy), True);
+    cls.shear = lambda self, sh, sv: self.setTransform(QTransform().shear(sh, sv), True)
+    cls.translate = lambda self, dx, dy: self.setTransform(QTransform.fromTranslate(dx, dy), True);
 
 def _patch_QHeaderView(qt_pkg):
     #see http://qt-project.org/doc/qt-5/qheaderview-compat.html
