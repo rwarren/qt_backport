@@ -1,4 +1,6 @@
-
+#For PyQt5's direct stance on compatibility with PyQt4, see this link:
+#  - http://pyqt.sourceforge.net/Docs/PyQt5/pyqt4_differences.html
+#
 #Patching notes:
 # - All QMatrix usages may need to be converted to QTransform.  QMatrix is now
 #    obsolete.  Fortunately, Qt has preserved the conversion of them by using
@@ -302,18 +304,27 @@ def _patch_QGraphicsItem(qt_pkg):
             sx, sy = args
             return self.setTransform(transform_cls.fromScale(sx, sy), True)
         else:
-            return cls.scale(*args, **kwargs)
+            return cls.scale(self, *args, **kwargs)
     
+    def _rotate(self, angle):
+        #Qt's compatibility docs (linked at the top of this patch call) say
+        #to use setRotation(rotation() + angle), but this is not correct.
+        #Doing this sets the angle directly without combining together with
+        #any existing transformations. The old rotate() *did* work with
+        #existing transformations. To be compatibile with this we need to use
+        #the transformation system.
+        self.setTransform(transform_cls().rotate(angle), True)
+        
     #simple renames...
     cls.acceptsHoverEvents = lambda self: self.acceptHoverEvents()
-    cls.setAcceptsHoverEvents = lambda self, enabled: self.acceptHoverEvents(enabled)
     cls.children = lambda self: self.childItems()
-    cls.rotate = lambda self, angle: self.setRotation(angle)
+    cls.rotate = _rotate
+    cls.setAcceptsHoverEvents = lambda self, enabled: self.acceptHoverEvents(enabled)
     
     #fixups...
     cls.scale = _scale
-    cls.translate = lambda self, dx, dy: self.setTransform(transform_cls.fromTranslate(dx, dy), True);
     cls.shear = lambda self, sh, sv: self.setTransform(transform_cls().shear(sh, sv), True)
+    cls.translate = lambda self, dx, dy: self.setTransform(transform_cls.fromTranslate(dx, dy), True);
 
 def _patch_QHeaderView(qt_pkg):
     #see http://qt-project.org/doc/qt-5/qheaderview-compat.html
