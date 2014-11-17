@@ -16,6 +16,10 @@ import sys
 import inspect
 import warnings
 import pkgutil
+try:
+    from itertools import izip as zip
+except ImportError: # we're using python 3.x
+    pass
 
 
 try:
