@@ -9,6 +9,9 @@
 #    see QPainter.combinedMatrix() and QPainter.deviceMatrix()... their new
 #    replacements *only* deal with QTransform.
 
+from __future__ import print_function
+from __future__ import absolute_import
+
 import sys
 import inspect
 from itertools import izip
@@ -165,7 +168,7 @@ def _copy_qt_module(src_module_name,
                     ):
     """Returns a copy of the PyQt5 module.  All top level classes in the module
     are also converted to subclasses of the original class in order to enable
-    override of class emthods without affecting the original classes from the
+    override of class methods without affecting the original classes from the
     original module.
     
     """
@@ -214,7 +217,7 @@ def _copy_qt_module(src_module_name,
             class_copies[cls_name] = type(cls_name, (cls, ), {})
             #print "DONE"
         except TypeError:
-            print "Can't subclass %s" % cls_name
+            print("Can't subclass %s" % cls_name)
             pass
         else:
             #stash a reference to the parent class (just in case)

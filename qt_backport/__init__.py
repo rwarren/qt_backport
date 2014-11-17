@@ -1,3 +1,6 @@
+from __future__ import absolute_import
+from __future__ import print_function
+
 import sys
 import os
 
@@ -30,7 +33,7 @@ def _create_base_qt4_emulator_with_pyqt5(emulator_module):
         raise ImportError(("qt_backport requires PyQt5 in order to function. "
                            "To install it, please see: %s" % install_url))
     from PyQt5 import QtCore as _Qt5Core
-    import qt5_backport as _qt5_backport
+    from . import qt5_backport as _qt5_backport
     _qt5_backport.load_modules(emulator_module)
     _qt5_backport.reassemble_QtGui(emulator_module)
     _qt5_backport.patch_api(emulator_module)
@@ -49,6 +52,7 @@ def _emulate_pyside_with_pyqt5(emulator_module):
     from PySide import QtCore
     QtCore.Signal = QtCore.pyqtSignal
     QtCore.Slot = QtCore.pyqtSlot
+    QtCore.__version__ = QtCore.QT_VERSION_STR
 
 def _emulate_pyqt4_with_pyqt5(emulator_module):
     _create_base_qt4_emulator_with_pyqt5(emulator_module)
