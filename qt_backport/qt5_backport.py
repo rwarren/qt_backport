@@ -28,7 +28,12 @@ from PyQt5 import QtGui          as _PyQt5_QtGui
 from PyQt5 import QtCore         as _PyQt5_QtCore
 from PyQt5 import QtPrintSupport as _PyQt5_QtPrintSupport
 from PyQt5 import QtMultimedia   as _PyQt5_QtMultimedia
-from PyQt5 import QtX11Extras    as _PyQt5_QtX11Extras
+try:
+    from PyQt5 import QtX11Extras    as _PyQt5_QtX11Extras
+except ImportError:
+    x11_exists = False #on Windows
+else:
+    x11_exists = True
 
 import qt_backport
 
@@ -247,8 +252,11 @@ def reassemble_QtGui(qt_pkg):
                      QtPrintSupport_backports: qt_pkg.QtPrintSupport,
                      QtCore_backports:         qt_pkg.QtCore,
                      QtMultimedia_backports:   qt_pkg.QtMultimedia,
-                     QtX11Extras_backports:    qt_pkg.QtX11Extras,
                      }
+    
+    if x11_exists:
+        backport_info[QtX11Extras_backports] = qt_pkg.QtX11Extras
+    
     for cls_names, module in backport_info.iteritems():
         for cls_name in cls_names:
             cls = getattr(module, cls_name)
