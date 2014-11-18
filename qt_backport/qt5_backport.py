@@ -301,8 +301,8 @@ def _patch_QColor(qt_pkg):
     #see http://qt-project.org/doc/qt-5/qcolor-obsolete.html
     cls = qt_pkg.QtGui.QColor
     #Simple renames...
-    cls.light = lambda(self): self.lighter() #Qt4.2 -> Qt4.3
-    cls.dark  = lambda(self): self.darker()  #Qt4.2 -> Qt4.3
+    cls.light = lambda self: self.lighter() #Qt4.2 -> Qt4.3
+    cls.dark  = lambda self: self.darker()  #Qt4.2 -> Qt4.3
 
 def _patch_QGraphicsItem(qt_pkg):
     #see http://qt-project.org/doc/qt-5/qgraphicsitem-compat.html
