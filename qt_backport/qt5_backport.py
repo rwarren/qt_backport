@@ -14,9 +14,12 @@ from __future__ import absolute_import
 
 import sys
 import inspect
-from itertools import izip
 import warnings
 import pkgutil
+try:
+    from itertools import izip as zip
+except ImportError: # we're using python 3.x
+    pass
 
 
 try:
@@ -184,11 +187,11 @@ def _copy_qt_module(src_module_name,
     src_module = __import__(src_module_name, fromlist = ["foo", ])
     
     src_classes = \
-        {k: v for k, v in src_module.__dict__.iteritems() \
+        {k: v for k, v in src_module.__dict__.items() \
          if inspect.isclass(v) and k.startswith("Q")}
     
     if not isolate_module_and_classes:
-        for k, v in src_classes.iteritems():
+        for k, v in src_classes.items():
             v._qt_root_class = v
         return src_module
     else:
@@ -198,7 +201,7 @@ def _copy_qt_module(src_module_name,
         raise NotImplementedError
         
     src_non_classes = \
-        {k: v for k, v in src_module.__dict__.iteritems() \
+        {k: v for k, v in src_module.__dict__.items() \
          if k not in src_classes}
     del src_non_classes["__name__"]
     del src_non_classes["__file__"]
@@ -216,7 +219,7 @@ def _copy_qt_module(src_module_name,
     # - not all of the classes are subclassable (eg: PyQt5.QtCore.pyqtSignal)
     #    so we need exception handling (and care) here
     class_copies = {}
-    for cls_name, cls in src_classes.iteritems():
+    for cls_name, cls in src_classes.items():
         try:
             #print "about to subclass %s.%s" % (src_module_name, cls_name,),
             class_copies[cls_name] = type(cls_name, (cls, ), {})
@@ -228,7 +231,7 @@ def _copy_qt_module(src_module_name,
             #stash a reference to the parent class (just in case)
             class_copies[cls_name]._qt_root_class = cls
     
-    #class_copies = {k: type(k, (v, ), {}) for k, v in src_classes.iteritems()}
+    #class_copies = {k: type(k, (v, ), {}) for k, v in src_classes.items()}
     
     #Make our destination module...
     # - doesn't strictly need to be a module (could be a class), but it may
@@ -257,7 +260,7 @@ def reassemble_QtGui(qt_pkg):
     if x11_exists:
         backport_info[QtX11Extras_backports] = qt_pkg.QtX11Extras
     
-    for cls_names, module in backport_info.iteritems():
+    for cls_names, module in backport_info.items():
         for cls_name in cls_names:
             cls = getattr(module, cls_name)
             setattr(qt_pkg.QtGui, cls_name, cls)
@@ -404,7 +407,7 @@ def _patch_QPainter(qt_pkg):
             else:
                 targetRects, sourceRects, pixmap = args[:3]
                 #hints = get_arg(args, kwargs, 3, "hints", 0)
-                for targetRect, sourceRect in izip(targetRects, sourceRects):
+                for targetRect, sourceRect in zip(targetRects, sourceRects):
                     cls.drawPixmap(self, targetRect, pixmap, sourceRect)
     
     def _setMatrix(self, matrix, combine):
