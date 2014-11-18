@@ -395,6 +395,9 @@ def _patch_QPainter(qt_pkg):
             #Currently only supporting the overload with this signature:
             #  ([QRectF, ], [QRectF, ], QPixmap, PixmapFragmentHints)
             # 
+            if len(args[0]) == 0:
+                #nothing to do...
+                return
             if type(args[0][0]) != qt_pkg.QtCore.QRectF:
                 #currently only supporting this overload.  Pass through and pray:
                 return old_drawPixmapFragments(self, *args, **kwargs)
