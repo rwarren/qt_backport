@@ -16,6 +16,7 @@ import sys
 import inspect
 import warnings
 import pkgutil
+import cgi # for QtCore.escape
 try:
     from itertools import izip as zip
 except ImportError: # we're using python 3.x
@@ -350,7 +351,7 @@ def _patch_QHeaderView(qt_pkg):
     
     #simple renames...
     cls.isClickable = lambda self: self.sectionsClickable()
-    cls.isMovable = lambda self: self.secionsMovable()
+    cls.isMovable = lambda self: self.sectionsMovable()
     cls.resizeMode = lambda self, logicalIndex: self.sectionResizeMode(logicalIndex)
     cls.setClickable = lambda self, clickable: self.setSectionsClickable(clickable)
     cls.setMovable = lambda self, movable: self.setSectionsMovable(movable)
@@ -555,6 +556,10 @@ def _patch_QWheelEvent(qt_pkg):
     cls.delta       = _QWheelEvent_delta
     cls.orientation = _QWheelEvent_orientation
 
+def _patch_Qt(qt_pkg):
+    cls = qt_pkg.QtCore.Qt
+    
+    cls.escape = staticmethod(lambda s: cgi.escape(s, True)) # no ' escape in Qt4
 
 def patch_api(qt_pkg):
     """Applies patches to make old api usage work with PyQt5.
@@ -582,6 +587,8 @@ def patch_api(qt_pkg):
     _patch_QPainterPath(qt_pkg)
     _patch_QRectF(qt_pkg)
     _patch_QWheelEvent(qt_pkg)
+    
+    _patch_Qt(qt_pkg)
     
     #And likely plenty more to come!
 
